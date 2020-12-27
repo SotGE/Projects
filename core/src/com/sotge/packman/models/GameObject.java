@@ -3,20 +3,32 @@ package com.sotge.packman.models;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Polygon;
 
 abstract class GameObject {
 
-    Rectangle bounds;
-    Sprite object;
+    public Polygon bounds;
+    public Sprite object;
 
-    GameObject(Texture texture, float x, float y, float width, float height) {
-        bounds = new Rectangle(x, y, width, height);
-        object = new Sprite(texture);
+    public GameObject(TextureRegion textureRegion, float x, float y, float width, float height) {
+        object = new Sprite(textureRegion);
+        object.setSize(width, height);
+        object.setPosition(x, y);
+        object.setOrigin(width / 2f, height / 2f);
+
+        bounds = new Polygon(new float[]{0f, 0f, width, 0f, width, height, 0f, height});
+        bounds.setPosition(x, y);
+        bounds.setOrigin(width / 2f, height / 2f);
     }
 
-    void Draw(SpriteBatch batch) {
-        object.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+    public void Draw(SpriteBatch batch) {
+        object.setPosition(bounds.getX(), bounds.getY());
+        object.setRotation(bounds.getRotation());
         object.draw(batch);
+    }
+
+    public Polygon getBounds() {
+        return bounds;
     }
 }
